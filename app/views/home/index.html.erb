@@ -1,0 +1,31 @@
+<%= render "layouts/navbar" %>
+<%= render "layouts/alerts" %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+
+            <% @posts.each do |post| %>
+                <div class="blog-post">
+                    <h2 class="blog-post-title"><%= link_to post.titulo, post_path(post.id) %></h2>
+                    <p class="datos-publicacion"> Publicado por <%= post.user.email %> hace <%= distance_of_time_in_words( Time.now, post.created_at) %> </p>
+                    <p>
+                    <div class="cuerpo-index">
+                        <% if post.cuerpo.length > 250 %>
+                            <%= truncate(post.cuerpo, length: 250) %>
+                        <% else %>
+                            <%= post.cuerpo %>
+                        <% end %>
+                    </div>
+                    </p>
+                    <% if user_signed_in? && post.user === current_user %>
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <%= link_to "Editar", edit_post_path(post.id) %>
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        <%= link_to "Eliminar", post_path(post.id), method: :delete, data: { confirm: "¿Está seguro que desea eliminar éste Post?" } %>
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

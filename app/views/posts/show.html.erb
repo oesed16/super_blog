@@ -1,0 +1,46 @@
+<%= render "layouts/navbar" %>
+<%= render "layouts/alerts" %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+
+            <%= link_to "Volver", root_path %>
+
+            <div class="blog-post">
+                <h2 class="blog-post-title"><%= @post.titulo %></h2>
+                <div class="cuerpo-index">
+                    <%= markdown(@post.cuerpo) %>
+                </div>
+            </div> <!-- /.blog-post -->
+
+            <% if @post.comments.exists? %>
+                <% @comments.each do |comment| %>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-secondary">
+                            <%= comment.user.email %> comentó hace <%= distance_of_time_in_words( Time.now, comment.created_at) %> 
+                        </li>
+                        <li class="list-group-item">
+                            <%= comment.comentario %> </br>
+                        </li>
+                    </ul>
+                    </br>
+                <% end %>
+            <% end %>
+
+            <% if user_signed_in? %>
+                <h4>Nuevo Comentario</h4>
+                <%= form_for ([@post, @post.comments.build]) do |f| %>
+                    <div class="form-group">
+                            <%= f.text_area :comentario, class: "form-control" %>
+                        </br>
+                        <p>
+                            <%= f.button "Comentar", class: "btn btn-primary" %>
+                        </p>
+                    </div>
+                <% end %>
+            <% end %>
+
+        </div>
+    </div>
+</div>
